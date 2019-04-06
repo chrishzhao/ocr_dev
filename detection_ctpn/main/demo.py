@@ -13,8 +13,8 @@ from nets import model_train as model
 from utils.rpn_msr.proposal_layer import proposal_layer
 from utils.text_connector.detectors import TextDetector
 
-tf.app.flags.DEFINE_string('test_data_path', 'data/demo2/', '')
-tf.app.flags.DEFINE_string('output_path', 'data/res/', '')
+tf.app.flags.DEFINE_string('test_data_path', '../data/', '')
+tf.app.flags.DEFINE_string('output_path', '../output/detection/', '')
 tf.app.flags.DEFINE_string('gpu', '0', '')
 tf.app.flags.DEFINE_string('checkpoint_path', 'checkpoints_mlt/', '')
 FLAGS = tf.app.flags.FLAGS
@@ -38,10 +38,10 @@ def resize_image(img):
     im_size_min = np.min(img_size[0:2])
     im_size_max = np.max(img_size[0:2])
 
-    im_scale = float(600) / float(im_size_min)
-    if np.round(im_scale * im_size_max) > 1200:
-        im_scale = float(1200) / float(im_size_max)
-    # im_scale = 1
+    # im_scale = float(600) / float(im_size_min)
+    # if np.round(im_scale * im_size_max) > 1200:
+    #     im_scale = float(1200) / float(im_size_max)
+    im_scale = 1
     new_h = int(img_size[0] * im_scale)
     new_w = int(img_size[1] * im_scale)
 
