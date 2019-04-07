@@ -17,9 +17,9 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import glog as logger
 
-from config import global_config
-from crnn_model import crnn_net
-from data_provider import tf_io_pipline_fast_tools
+from ..config import global_config
+from ..crnn_model import crnn_net
+from ..data_provider import tf_io_pipline_fast_tools
 
 CFG = global_config.cfg
 
@@ -81,7 +81,8 @@ def recognize(image_path, weights_path, char_dict_path, ord_map_dict_path, is_vi
 
     inputdata = tf.placeholder(
         dtype=tf.float32,
-        shape=[1, new_heigth, new_width, CFG.ARCH.INPUT_CHANNELS],
+        #shape=[1, new_heigth, new_width, CFG.ARCH.INPUT_CHANNELS],
+        shape=[1, None, None, CFG.ARCH.INPUT_CHANNELS],
         name='input'
     )
 
@@ -147,19 +148,37 @@ def recognize(image_path, weights_path, char_dict_path, ord_map_dict_path, is_vi
 
     return
 
+def reco():
+    recognize(
+        image_path='/Users/huasha.zhao/PycharmProjects/ocr_dev/data/test_04.jpg',
+        weights_path='/Users/huasha.zhao/PycharmProjects/ocr_dev/recognition_crnn/model/zh_model/shadownet.ckpt',
+        char_dict_path='/Users/huasha.zhao/PycharmProjects/ocr_dev/recognition_crnn/data/char_dict/char_dict_cn.json',
+        ord_map_dict_path='/Users/huasha.zhao/PycharmProjects/ocr_dev/recognition_crnn/data/char_dict/ord_map_cn.json',
+        is_vis=False
+    )
 
 if __name__ == '__main__':
     """
     
     """
-    # init images
-    args = init_args()
+    # # init images
+    # args = init_args()
+    #
+    # # detect images
+    # recognize(
+    #     image_path=args.image_path,
+    #     weights_path=args.weights_path,
+    #     char_dict_path=args.char_dict_path,
+    #     ord_map_dict_path=args.ord_map_dict_path,
+    #     is_vis=args.visualize
+    # )
 
+    #
     # detect images
     recognize(
-        image_path=args.image_path,
-        weights_path=args.weights_path,
-        char_dict_path=args.char_dict_path,
-        ord_map_dict_path=args.ord_map_dict_path,
-        is_vis=args.visualize
+        image_path='/Users/huasha.zhao/PycharmProjects/ocr_dev/data/test_04.jpg',
+        weights_path='/Users/huasha.zhao/PycharmProjects/ocr_dev/recognition_crnn/model/zh_model/shadownet.ckpt',
+        char_dict_path='/Users/huasha.zhao/PycharmProjects/ocr_dev/recognition_crnn/data/char_dict/char_dict_cn.json',
+        ord_map_dict_path='/Users/huasha.zhao/PycharmProjects/ocr_dev/recognition_crnn/data/char_dict/ord_map_cn.json',
+        is_vis=False
     )

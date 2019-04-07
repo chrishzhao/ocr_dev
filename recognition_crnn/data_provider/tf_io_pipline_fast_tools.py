@@ -20,8 +20,8 @@ import numpy as np
 import tensorflow as tf
 import tqdm
 
-from config import global_config
-from local_utils import establish_char_dict
+from ..config import global_config
+from ..local_utils import establish_char_dict
 
 CFG = global_config.cfg
 

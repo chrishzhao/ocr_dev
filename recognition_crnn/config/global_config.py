@@ -11,7 +11,7 @@ Set some global configuration
 import logging
 
 from easydict import EasyDict as edict
-from local_utils import log_utils
+from ..local_utils import log_utils
 
 __C = edict()
 # Consumers can get config by: from config import cfg

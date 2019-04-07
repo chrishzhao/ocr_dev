@@ -18,9 +18,9 @@ import glog as log
 import tqdm
 import tensorflow as tf
 
-from config import global_config
-from local_utils import establish_char_dict
-from data_provider import tf_io_pipline_fast_tools
+from ..config import global_config
+from ..local_utils import establish_char_dict
+from . import tf_io_pipline_fast_tools
 
 CFG = global_config.cfg
 

@@ -13,8 +13,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.contrib import rnn
 
-from crnn_model import cnn_basenet
-from config import global_config
+from . import cnn_basenet
+from ..config import global_config
 
 CFG = global_config.cfg
 
@@ -151,7 +151,7 @@ class ShadowNet(cnn_basenet.CNNBaseModel):
         with tf.variable_scope(name_or_scope=name):
 
             shape = inputdata.get_shape().as_list()
-            assert shape[1] == 1  # H of the feature map must equal to 1
+            #assert shape[1] == 1  # H of the feature map must equal to 1
 
             ret = self.squeeze(inputdata=inputdata, axis=1, name='squeeze')
 

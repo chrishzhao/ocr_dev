@@ -6,7 +6,7 @@ import cv2
 import matplotlib.pyplot as plt
 import numpy as np
 
-from utils.dataset.data_util import GeneratorEnqueuer
+from ..dataset.data_util import GeneratorEnqueuer
 
 DATA_FOLDER = "data/dataset/mlt/"
 
