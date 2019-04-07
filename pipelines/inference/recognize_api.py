@@ -8,82 +8,107 @@ from recognition_crnn.data_provider import tf_io_pipline_fast_tools
 
 CFG = global_config.cfg
 
+from .inference_api import InferenceAPI
 
-def load_model(weights_path, char_dict_path, ord_map_dict_path):
+class RecognitionAPI(InferenceAPI):
 
-    inputdata = tf.placeholder(
-        dtype=tf.float32,
-        shape=[1, None, None, CFG.ARCH.INPUT_CHANNELS],
-        name='input'
-    )
+    def __init__(self, model_info):
 
-    seq_len = tf.placeholder(
-        dtype=tf.int32,
-        shape=[1],
-        name='seq_len'
-    )
+        self.weights_path = model_info['weights_path']
+        self.char_dict_path = model_info['char_dict_path']
+        self.ord_map_dict_path = model_info['ord_map_dict_path']
 
-    codec = tf_io_pipline_fast_tools.CrnnFeatureReader(
-        char_dict_path=char_dict_path,
-        ord_map_dict_path=ord_map_dict_path
-    )
 
-    net = crnn_net.ShadowNet(
-        phase='test',
-        hidden_nums=CFG.ARCH.HIDDEN_UNITS,
-        layers_nums=CFG.ARCH.HIDDEN_LAYERS,
-        num_classes=CFG.ARCH.NUM_CLASSES
-    )
+    def load_model(self):
 
-    inference_ret = net.inference(
-        inputdata=inputdata,
-        name='shadow_net',
-        reuse=False
-    )
+        recognition_graph = tf.Graph()
+        with recognition_graph.as_default():
+            inputdata = tf.placeholder(
+                dtype=tf.float32,
+                shape=[1, None, None, CFG.ARCH.INPUT_CHANNELS],
+                name='input'
+            )
 
-    decodes, _ = tf.nn.ctc_beam_search_decoder(
-        inputs=inference_ret,
-        # sequence_length=CFG.ARCH.SEQ_LENGTH * np.ones(1),
-        sequence_length=seq_len,
-        merge_repeated=False
-    )
+            seq_len = tf.placeholder(
+                dtype=tf.int32,
+                shape=[1],
+                name='seq_len'
+            )
 
-    # config tf saver
-    saver = tf.train.Saver()
+            codec = tf_io_pipline_fast_tools.CrnnFeatureReader(
+                char_dict_path=self.char_dict_path,
+                ord_map_dict_path=self.ord_map_dict_path
+            )
 
-    # config tf session
-    sess_config = tf.ConfigProto(allow_soft_placement=True)
-    sess_config.gpu_options.per_process_gpu_memory_fraction = CFG.TEST.GPU_MEMORY_FRACTION
-    sess_config.gpu_options.allow_growth = CFG.TEST.TF_ALLOW_GROWTH
+            net = crnn_net.ShadowNet(
+                phase='test',
+                hidden_nums=CFG.ARCH.HIDDEN_UNITS,
+                layers_nums=CFG.ARCH.HIDDEN_LAYERS,
+                num_classes=CFG.ARCH.NUM_CLASSES
+            )
 
-    sess = tf.Session(config=sess_config)
+            inference_ret = net.inference(
+                inputdata=inputdata,
+                name='shadow_net',
+                reuse=False
+            )
 
-    saver.restore(sess=sess, save_path=weights_path)
+            decodes, _ = tf.nn.ctc_beam_search_decoder(
+                inputs=inference_ret,
+                # sequence_length=CFG.ARCH.SEQ_LENGTH * np.ones(1),
+                sequence_length=seq_len,
+                merge_repeated=False
+            )
 
-    return sess, inference_ret, decodes, inputdata, seq_len, codec
+            # config tf saver
+            saver = tf.train.Saver()
 
-def infer( image, model ):
+            # config tf session
+            sess_config = tf.ConfigProto(allow_soft_placement=True)
+            sess_config.gpu_options.per_process_gpu_memory_fraction = CFG.TEST.GPU_MEMORY_FRACTION
+            sess_config.gpu_options.allow_growth = CFG.TEST.TF_ALLOW_GROWTH
 
-    new_heigth = 32
-    scale_rate = new_heigth / image.shape[0]
-    new_width = int(scale_rate * image.shape[1])
-    new_width = new_width if new_width > 100 else 100
-    image = cv2.resize(image, (new_width, new_heigth), interpolation=cv2.INTER_LINEAR)
-    image = np.array(image, np.float32) / 127.5 - 1.0
+            sess = tf.Session(config=sess_config)
 
-    sess, inference_ret, decodes, inputdata, seq_len, codec = model
+            saver.restore(sess=sess, save_path=self.weights_path)
 
-    ret = sess.run(inference_ret, feed_dict={inputdata: [image], seq_len: [int(new_width/4)]})
-    print(ret.shape)
+            self.sess = sess
+            self.inference_ret = inference_ret
+            self.decodes = decodes
+            self.inputdata = inputdata
+            self.seq_len = seq_len
+            self.codec = codec
 
-    preds = sess.run(decodes, feed_dict={inputdata: [image], seq_len: [int(new_width/4)]})
+        self.recognition_graph = recognition_graph
 
-    print(preds[0])
+    def infer( self, image ):
 
-    preds = codec.sparse_tensor_to_str(preds[0])
+        with self.recognition_graph.as_default():
+            new_heigth = 32
+            scale_rate = new_heigth / image.shape[0]
+            new_width = int(scale_rate * image.shape[1])
+            new_width = new_width if new_width > 100 else 100
+            image = cv2.resize(image, (new_width, new_heigth), interpolation=cv2.INTER_LINEAR)
+            image = np.array(image, np.float32) / 127.5 - 1.0
 
-    print('Predict image result {:s}'.format(
-         preds[0])
-    )
+            sess = self.sess
+            inference_ret = self.inference_ret
+            decodes = self.decodes
+            inputdata = self.inputdata
+            seq_len = self.seq_len
+            codec = self.codec
 
-    return preds[0]
+            ret = sess.run(inference_ret, feed_dict={inputdata: [image], seq_len: [int(new_width/4)]})
+            #print(ret.shape)
+
+            preds = sess.run(decodes, feed_dict={inputdata: [image], seq_len: [int(new_width/4)]})
+
+            #print(preds[0])
+
+            preds = codec.sparse_tensor_to_str(preds[0])
+
+            #print('Predict image result {:s}'.format(
+            #     preds[0])
+            #)
+
+        return preds[0]
