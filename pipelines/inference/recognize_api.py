@@ -58,6 +58,7 @@ class RecognitionAPI(InferenceAPI):
                 inputs=inference_ret,
                 # sequence_length=CFG.ARCH.SEQ_LENGTH * np.ones(1),
                 sequence_length=seq_len,
+                beam_width=10,
                 merge_repeated=False
             )
 
