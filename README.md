@@ -68,6 +68,8 @@ Response:
 ```
 `resized_im` gives the location of the resized image on the host machine, for debugging purpose.
 
+For more examples, please refer to scripts under ``tests``.
+
 ## Service Deployment
 In case you would like to deploy your own service, please do the following,
 ```shell
