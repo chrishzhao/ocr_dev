@@ -33,7 +33,11 @@ class DetectionAPI(InferenceAPI):
             variable_averages = tf.train.ExponentialMovingAverage(0.997, global_step)
             saver = tf.train.Saver(variable_averages.variables_to_restore())
 
-            sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
+            sess_config = tf.ConfigProto(allow_soft_placement=True)
+            sess_config.gpu_options.per_process_gpu_memory_fraction = 0.4
+            sess_config.gpu_options.allow_growth = True
+
+            sess = tf.Session(config=sess_config)
             ckpt_state = tf.train.get_checkpoint_state(self.checkpoint_path)
             model_path = os.path.join(self.checkpoint_path, os.path.basename(ckpt_state.model_checkpoint_path))
             print('Restore from {}'.format(model_path))
