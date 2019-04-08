@@ -9,6 +9,7 @@ from recognition_crnn.data_provider import tf_io_pipline_fast_tools
 CFG = global_config.cfg
 
 from .inference_api import InferenceAPI
+import time
 
 class RecognitionAPI(InferenceAPI):
 
@@ -84,6 +85,7 @@ class RecognitionAPI(InferenceAPI):
     def infer( self, image ):
 
         with self.recognition_graph.as_default():
+            start = time.time()
             new_heigth = 32
             scale_rate = new_heigth / image.shape[0]
             new_width = int(scale_rate * image.shape[1])
@@ -110,5 +112,7 @@ class RecognitionAPI(InferenceAPI):
             #print('Predict image result {:s}'.format(
             #     preds[0])
             #)
+            cost_time = (time.time() - start)
+            print("recognizer cost time: {:.2f}s".format(cost_time))
 
         return preds[0]

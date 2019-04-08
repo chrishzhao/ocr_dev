@@ -88,7 +88,7 @@ class DetectionAPI(InferenceAPI):
             boxes = np.array(boxes, dtype=np.int)
 
             cost_time = (time.time() - start)
-            print("cost time: {:.2f}s".format(cost_time))
+            print("detector cost time: {:.2f}s".format(cost_time))
 
             if debug:
                 for i, box in enumerate(boxes):
