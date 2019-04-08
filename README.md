@@ -13,7 +13,7 @@ Text detection performs reasonably well on short snippet of document, either tex
 or table. See samples under `data` directory.
 
 Text recognition performs well on correctly detected text block. 
-CER is under 10% evaluated on limited text documents.
+CER is under 5% evaluated on limited text documents.
 
 ### Speed
 
@@ -22,7 +22,7 @@ Very limited speed up is observed when using the Titan Xp GPU, which is at least
 slower than a P100 or V100.
 
 Most time is spent on the CTC decoder of the recognizer, which is by nature a sequential process.
-Text blocks are executed one by one in a linear fashion. 
+Text blocks are recognized one by one in a linear manner. 
 
 ## Requirements
 
@@ -42,6 +42,10 @@ Service request (on gbox1):
 ```
 curl -F image=@'data/text_small.jpg' http://localhost:5000/ocr 
 ```
+Data:
+
+![alt text](https://github.com/chrishzhao/ocr_dev/blob/master/data/text_small.jpg "text_small")
+
 
 Response:
 ```json
