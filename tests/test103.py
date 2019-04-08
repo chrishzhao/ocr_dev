@@ -31,7 +31,7 @@ def _test101():
     ocr.load_model()
 
 
-    img_fn = os.path.join(BASEDIR, 'data', 'table_small.jpg')
+    img_fn = os.path.join(BASEDIR, 'data', 'text_small.jpg')
     image = cv2.imread(img_fn, cv2.IMREAD_COLOR)
     res = ocr.infer(image, debug=True)
     print(res)

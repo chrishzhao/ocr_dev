@@ -5,6 +5,7 @@ import os
 import cv2
 import uuid
 import re
+from .preprocess import resize_image
 
 class OcrAPI(InferenceAPI):
 
@@ -23,12 +24,14 @@ class OcrAPI(InferenceAPI):
 
     def remove_noise(self, text):
 
-        pattern = '[\[\]_]'
+        pattern = '[\[\]_-]'
         return re.sub(pattern, '', text)
 
     def infer(self, image, debug = False):
 
-        boxes, img = self.detector.infer(image)
+        img, _, im_fn = resize_image(image, debug)
+
+        boxes = self.detector.infer(img, debug)
 
         res = []
 
@@ -45,7 +48,12 @@ class OcrAPI(InferenceAPI):
                 }
             )
 
-        return res
+        res_final = {
+            'result': res,
+            'resized_im': im_fn
+        }
+
+        return res_final
 
     def bbox2dict(self, bbox):
 
@@ -84,8 +92,8 @@ class OcrAPI(InferenceAPI):
             'output', 'detection')
         basename = '{}.jpg'.format(image_id)
         # cv2.imwrite(os.path.join(output_path, basename), crop_img[:, :, ::-1])
-        cv2.imwrite(os.path.join(output_path, basename), crop_img)
-
+        if debug:
+            cv2.imwrite(os.path.join(output_path, basename), crop_img)
         return crop_img, image_id
 
 

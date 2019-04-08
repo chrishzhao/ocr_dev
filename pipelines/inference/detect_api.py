@@ -48,7 +48,7 @@ class DetectionAPI(InferenceAPI):
 
         self.detection_graph = detection_graph
 
-    def infer( self, im, debug = True ):
+    def infer( self, img, debug = True ):
 
         with self.detection_graph.as_default():
             print('===============')
@@ -59,7 +59,6 @@ class DetectionAPI(InferenceAPI):
             # except:
             #     raise("Error reading image {}!".format(im_fn))
 
-            img, (rh, rw) = resize_image(im)
             h, w, c = img.shape
             im_info = np.array([h, w, c]).reshape([1, 3])
 
@@ -91,13 +90,14 @@ class DetectionAPI(InferenceAPI):
                 for i, box in enumerate(boxes):
                     cv2.polylines(img, [box[:8].astype(np.int32).reshape((-1, 1, 2))], True, color=(0, 255, 0),
                                   thickness=2)
-                img_r = cv2.resize(img, None, None, fx=1.0 / rh, fy=1.0 / rw, interpolation=cv2.INTER_LINEAR)
+                #img_r = cv2.resize(img, None, None, fx=1.0 / rh, fy=1.0 / rw, interpolation=cv2.INTER_LINEAR)
 
-                output_path = os.path.join(
-                    os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-                    'output', 'detection')
+                # output_path = os.path.join(
+                #     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+                #     'output', 'detection')
+                output_path = '/tmp'
                 basename = '{}.jpg'.format(str(uuid.uuid4()))
-                cv2.imwrite(os.path.join(output_path, basename), img_r[:, :, ::-1])
+                cv2.imwrite(os.path.join(output_path, basename), img[:, :, ::-1])
 
                 with open(os.path.join(output_path, os.path.splitext(basename)[0]) + ".txt",
                           "w") as f:
@@ -106,4 +106,4 @@ class DetectionAPI(InferenceAPI):
                         line += "," + str(scores[i]) + "\r\n"
                         f.writelines(line)
 
-        return boxes, img
+        return boxes

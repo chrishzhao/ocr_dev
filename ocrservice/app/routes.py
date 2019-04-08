@@ -48,7 +48,5 @@ def ocr_service():
         f.save(img_fn)
         image = cv2.imread(img_fn, cv2.IMREAD_COLOR)
         res = ocr.infer(image, debug=True)
-        res_final = { 'result': res,
-            'image_path': img_fn}
 
-        return json.dumps(res_final, ensure_ascii=False)
+        return json.dumps(res, ensure_ascii=False)
