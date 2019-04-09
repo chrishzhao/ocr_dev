@@ -83,8 +83,8 @@ __C.TRAIN.VAL_DISPLAY_STEP = 1000
 __C.TEST = edict()
 
 # Set the GPU resource used during testing process
-__C.TEST.GPU_MEMORY_FRACTION = 0.6
+__C.TEST.GPU_MEMORY_FRACTION = 0.4
 # Set the GPU allow growth parameter during tensorflow testing process
-__C.TEST.TF_ALLOW_GROWTH = False
+__C.TEST.TF_ALLOW_GROWTH = True
 # Set the test batch size
 __C.TEST.BATCH_SIZE = 32
