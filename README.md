@@ -17,11 +17,11 @@ CER is under 5% evaluated on limited text documents.
 
 ### Speed
 
-Right now the service is very slow - it takes minutes to process a short text snippet.
-Very limited speed up is observed when using the Titan Xp GPU, which is at least 10x
-slower than a P100 or V100.
+Right now the service is not super fast - it takes seconds to process a short text snippet.
+Very limited speed up is observed when using the Titan Xp GPU, due to many ops do not have
+gpu implementations right now.
 
-Most time is spent on the CTC decoder of the recognizer, which is by nature a sequential process.
+Most time is spent on the CTC decoder (implemented only on cpu) of the recognizer, which is by nature a sequential process.
 Text blocks are recognized one by one in a linear manner. 
 
 ## Requirements
