@@ -8,7 +8,16 @@ class Config:
     RPN_BBOX_INSIDE_WEIGHTS = (1.0, 1.0, 1.0, 1.0)
     RPN_POSITIVE_WEIGHT = -1.0
 
-    RPN_PRE_NMS_TOP_N = 12000
-    RPN_POST_NMS_TOP_N = 1000
+    # RPN_PRE_NMS_TOP_N = 12000
+    # RPN_POST_NMS_TOP_N = 1000
+
+    # good for text
+    # RPN_PRE_NMS_TOP_N = 24000
+    # RPN_POST_NMS_TOP_N = 2000
+
+    # good for text
+    RPN_PRE_NMS_TOP_N = 36000
+    RPN_POST_NMS_TOP_N = 3000
+
     RPN_NMS_THRESH = 0.7
     RPN_MIN_SIZE = 8

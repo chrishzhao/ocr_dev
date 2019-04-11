@@ -7,10 +7,25 @@ def resize_image(img, debug = False):
     im_size_min = np.min(img_size[0:2])
     im_size_max = np.max(img_size[0:2])
 
-    im_scale = float(600) / float(im_size_min)
-    if np.round(im_scale * im_size_max) > 1200:
-        im_scale = float(1200) / float(im_size_max)
-    #im_scale = 1
+    # im_scale = float(600) / float(im_size_min)
+    # if np.round(im_scale * im_size_max) > 1200:
+    #     im_scale = float(1200) / float(im_size_max)
+    # im_scale = float(2400) / float(im_size_min)
+    # if np.round(im_scale * im_size_max) > 4800:
+    #     im_scale = float(4800) / float(im_size_max)
+
+    # im_scale = float(2400) / float(im_size_min)
+    # if np.round(im_scale * im_size_max) > 4800:
+    #     im_scale = float(4800) / float(im_size_max)
+
+    x = 2500
+
+    if float(im_size_min)>x:
+        im_scale = float(x) / float(im_size_min)
+        if np.round(im_scale * im_size_max) > x * 2:
+            im_scale = float(x * 2) / float(im_size_max)
+    else:
+        im_scale = 1
     new_h = int(img_size[0] * im_scale)
     new_w = int(img_size[1] * im_scale)
 

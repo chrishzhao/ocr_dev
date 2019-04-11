@@ -33,9 +33,9 @@ def _test101():
 
     img_fn = os.path.join(BASEDIR, 'data', 'text_small.jpg')
     image = cv2.imread(img_fn, cv2.IMREAD_COLOR)
-    for i in range(10):
+    for i in range(1):
         res = ocr.infer(image, debug=True)
-    #print(res)
+    print(res)
 
     return res
 

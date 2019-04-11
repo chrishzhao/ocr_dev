@@ -6,6 +6,7 @@ import cv2
 import uuid
 import re
 from .preprocess import resize_image
+import time
 
 class OcrAPI(InferenceAPI):
 
@@ -29,6 +30,7 @@ class OcrAPI(InferenceAPI):
 
     def infer(self, image, debug = False):
 
+        start = time.time()
         img, _, im_fn = resize_image(image, debug)
 
         boxes = self.detector.infer(img, debug)
@@ -52,6 +54,9 @@ class OcrAPI(InferenceAPI):
             'result': res,
             'resized_im': im_fn
         }
+
+        cost_time = (time.time() - start)
+        print("total time: {:.2f}s".format(cost_time))
 
         return res_final
 
@@ -87,12 +92,13 @@ class OcrAPI(InferenceAPI):
         crop_img = image[ymin:ymax, xmin:xmax]
 
         image_id = str(uuid.uuid4())
-        output_path = os.path.join(
-            os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
-            'output', 'detection')
+        # output_path = os.path.join(
+        #     os.path.dirname(os.path.dirname(os.path.dirname(__file__))),
+        #     'output', 'detection')
+        output_path = '/tmp'
         basename = '{}.jpg'.format(image_id)
         # cv2.imwrite(os.path.join(output_path, basename), crop_img[:, :, ::-1])
-        if debug:
+        if debug and False:
             cv2.imwrite(os.path.join(output_path, basename), crop_img)
         return crop_img, image_id
 
