@@ -36,7 +36,7 @@ gpu implementations right now.
 Most time is spent on the CTC decoder (implemented only on cpu) of the recognizer, which is by nature a sequential process.
 Text blocks are recognized one by one in a linear manner. 
 
-There are probably another 10x speed-up with the following improvements:
+There are probably another 10x speed-up to bring processing time per page to a couple of seconds, with the following improvements:
 1. rewrite the text connector and recognition decoder in c++;
 2. use multi-threading for text block recognition (better done in c++ too);
 3. replace the detection backbone network with a shallower one (right now vgg16);
