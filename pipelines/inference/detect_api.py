@@ -34,7 +34,7 @@ class DetectionAPI(InferenceAPI):
             saver = tf.train.Saver(variable_averages.variables_to_restore())
 
             sess_config = tf.ConfigProto(allow_soft_placement=True)
-            sess_config.gpu_options.per_process_gpu_memory_fraction = 0.4
+            sess_config.gpu_options.per_process_gpu_memory_fraction = 0.8
             sess_config.gpu_options.allow_growth = True
 
             sess = tf.Session(config=sess_config)
