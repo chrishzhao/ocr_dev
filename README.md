@@ -42,7 +42,7 @@ There are probably another 10x speed-up with the following improvements:
 3. replace the detection backbone network with a shallower one (right now vgg16);
 4. rewrite the recognition decoder using greedy/approximate method (remove ctc);
 5. upgrade to a better GPU;
-6. model compression and quantization;
+6. model compression and quantization (probably to int8?);
 
 ## Requirements
 
