@@ -26,7 +26,7 @@ Much improvement can be done on accuracy:
 1. train detection model on domains of interest;
 2. train recognition model on domains of interest;
 3. add domain specific language models at decoder;
-4. but before all above we need a benchmark dataset;
+4. but before all above we need some benchmark datasets and data generation tools;
 
 ### Speed
 
