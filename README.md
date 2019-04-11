@@ -1,4 +1,4 @@
-## Introduction
+## About this Project
 This project implements an end to end ocr solution built on top of recent deep learning based text detection (CTPN) and recognizition (CRNN) methods. 
 The solution is readily deployable via Flask REST APIs.
 
@@ -7,22 +7,42 @@ But we will get it there though (hopefully soon) ...
 
 ## Performance
 
+### Experiment Setup
+
+The model parameters are tuned on full document image, as images under `data` directory.
+The documents are scanned images with ppi of at least 300, and with horizontal text blocks (no lines with tilts).
+
+Performance on short snippet may be degraded, because parameters are not tuned on them.
+
 ### Accuray
 
-Text detection performs reasonably well on short snippet of document, either text 
-or table. See samples under `data` directory.
+Text detection performs reasonably well on full document, either text 
+or table, given we have not done any domain adaption yet. See samples under `data` directory.
 
-Text recognition performs well on correctly detected text block. 
+Text recognition performs well on correctly detected and un-corrupted text block. 
 CER is under 5% evaluated on limited text documents.
+
+Much improvement can be done on accuracy:
+1. train detection model on domains of interest;
+2. train recognition model on domains of interest;
+3. add domain specific models at decoder;
 
 ### Speed
 
-Right now the service is not super fast - it takes seconds to process a short text snippet.
-Very limited speed up is observed when using the Titan Xp GPU, due to many ops do not have
+Right now the service is not super fast - it takes 20-60 seconds to process a full document depending on how dense are the texts.
+Very limited speed up (1.5x) is observed when using the Titan Xp GPU, due to many ops do not have
 gpu implementations right now.
 
 Most time is spent on the CTC decoder (implemented only on cpu) of the recognizer, which is by nature a sequential process.
 Text blocks are recognized one by one in a linear manner. 
+
+There are probably another 10x speed-up with the following improvements:
+1. rewrite the text connector and recognition decoder in c++;
+2. use multi-threading for text block recognition (better done in c++ too);
+3. replace the detection backbone network with a shallower one (right now vgg16);
+4. rewrite the recognition decoder using greedy/approximate method (remove ctc);
+5. upgrade to a better GPU;
+6. model compression and quantization;
 
 ## Requirements
 

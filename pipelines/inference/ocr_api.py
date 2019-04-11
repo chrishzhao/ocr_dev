@@ -25,7 +25,7 @@ class OcrAPI(InferenceAPI):
 
     def remove_noise(self, text):
 
-        pattern = '[\[\]_-]'
+        pattern = '[\[\]_]'
         return re.sub(pattern, '', text)
 
     def infer(self, image, debug = False):
